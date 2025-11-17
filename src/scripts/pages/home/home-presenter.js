@@ -1,4 +1,5 @@
 import { reportMapper } from '../../data/api-mapper';
+import dummyReports from '../../data/dummy-reports';
 
 export default class HomePresenter {
   #view;
@@ -23,8 +24,6 @@ export default class HomePresenter {
   async initialGalleryAndMap() {
     this.#view.showLoading();
     try {
-      // await this.showReportsListMap();
-
       const response = await this.#model.getAllReports();
 
       if (!response.ok) {
@@ -33,13 +32,13 @@ export default class HomePresenter {
         return;
       }
 
-      // Mapping data laporan
       let reports = await Promise.all(response.data.map(reportMapper));
 
-      // Sort
       reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-      this.#view.populateReportsList(response.message, reports);
+      const combinedReports = [...dummyReports, ...reports];
+
+      this.#view.populateReportsList(response.message, combinedReports);
 
     } catch (error) {
       console.error('initialGalleryAndMap: error:', error);
