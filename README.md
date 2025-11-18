@@ -66,6 +66,13 @@ Akun diperlukan untuk membuat laporan & memberikan komentar.
 - HTML, CSS, JavaScript  
 - Webpack  
 - Leaflet.js  
-- REST API  
-- Tiny Slider  
-- Netlify  
+- REST API    
+- Netlify
+
+---
+
+## 🌐 Demo Aplikasi
+
+Aplikasi dapat diakses melalui link berikut:
+
+🔗 **https://pedulikota.netlify.app**
