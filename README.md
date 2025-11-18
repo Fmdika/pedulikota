@@ -61,25 +61,6 @@ Akun diperlukan untuk membuat laporan & memberikan komentar.
 
 ---
 
-### 📁 6. Dummy Data untuk Beranda
-Aplikasi menyediakan beberapa data dummy seperti:
-- Lampu jalan rusak  
-- Jalan berlubang  
-- Taman rusak  
-- Pipa bocor  
-- Drainase tersumbat  
-
-Dummy ini selalu muncul di halaman utama sebagai contoh laporan.
-
----
-
-### 🧭 7. Drawer Navigation (Responsive)
-Navigasi samping yang menyesuaikan tampilan:
-- Mobile friendly  
-- Menampilkan menu berbeda saat login / tidak login  
-
----
-
 ## 🛠️ Teknologi yang Digunakan
 
 - HTML, CSS, JavaScript  
