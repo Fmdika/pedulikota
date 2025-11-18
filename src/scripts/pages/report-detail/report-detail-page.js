@@ -56,8 +56,15 @@ export default class ReportDetailPage {
 
     this.#setupForm();
 
-    this.#presenter.showReportDetail();
-    this.#presenter.getCommentsList();
+    const isDummy = await this.#presenter.showReportDetail();
+
+    // Jika dummy → Jangan panggil komentar dari API
+    if (!isDummy) {
+      this.#presenter.getCommentsList();
+    } else {
+      document.getElementById('report-detail-comments-list').innerHTML =
+        "<p>Komentar tidak tersedia.</p>";
+    }
   }
 
   async populateReportDetailAndInitialMap(message, report) {

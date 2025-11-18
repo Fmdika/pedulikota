@@ -1,4 +1,5 @@
 import { reportMapper } from '../../data/api-mapper';
+import dummyReports from '../../data/dummy-reports';
 
 export default class ReportDetailPresenter {
   #reportId;
@@ -27,18 +28,33 @@ export default class ReportDetailPresenter {
     try {
       const response = await this.#apiModel.getReportById(this.#reportId);
 
-      if (!response.ok) {
-        console.error('showReportDetail: response:', response);
-        this.#view.populateReportDetailError(response.message);
-        return;
+      if (response.ok && response.data) {
+        const report = await reportMapper(response.data);
+
+        await this.#view.populateReportDetailAndInitialMap(response.message, report);
+        return false; 
       }
 
-      const report = await reportMapper(response.data);
+      const localDummy = dummyReports.find((r) => String(r.id) === String(this.#reportId));
 
-      this.#view.populateReportDetailAndInitialMap(response.message, report);
+      if (localDummy) {
+        await this.#view.populateReportDetailAndInitialMap('OK (dummy)', localDummy);
+        return true;
+      }
+
+      this.#view.populateReportDetailError(response.message);
+      return false;
     } catch (error) {
-      console.error('showReportDetail: error:', error);
+
+      const localDummy = dummyReports.find((r) => String(r.id) === String(this.#reportId));
+
+      if (localDummy) {
+        await this.#view.populateReportDetailAndInitialMap('OK (dummy)', localDummy);
+        return true;
+      }
+
       this.#view.populateReportDetailError(error.message);
+      return false;
     } finally {
       this.#view.hideReportDetailLoading();
     }
@@ -68,9 +84,6 @@ export default class ReportDetailPresenter {
         return;
       }
 
-      // No need to wait response
-      // this.notifyReportOwner(response.data.id);
-
       this.#view.postNewCommentSuccessfully(response.message, response.data);
     } catch (error) {
       console.error('postNewComment: error:', error);
@@ -79,50 +92,4 @@ export default class ReportDetailPresenter {
       this.#view.hideSubmitLoadingButton();
     }
   }
-
-  // async notifyReportOwner(commentId) {
-  //   try {
-  //     const response = await this.#apiModel.sendCommentToReportOwnerViaNotification(
-  //       this.#reportId,
-  //       commentId,
-  //     );
-
-  //     if (!response.ok) {
-  //       console.error('notifyReportOwner: response:', response);
-  //       return;
-  //     }
-
-  //     console.log('notifyReportOwner:', response.message);
-  //   } catch (error) {
-  //     console.error('notifyReportOwner: error:', error);
-  //   }
-  // }
-
-  // async notifyMe() {
-  //   try {
-  //     const response = await this.#apiModel.sendReportToMeViaNotification(this.#reportId);
-
-  //     if (!response.ok) {
-  //       console.error('notifyMe: response:', response);
-  //       return;
-  //     }
-
-  //     console.log('notifyMe:', response.message);
-  //   } catch (error) {
-  //     console.error('notifyMe: error:', error);
-  //   }
-  // }
-
-  // showSaveButton() {
-  //   if (this.#isReportSaved()) {
-  //     this.#view.renderRemoveButton();
-  //     return;
-  //   }
-
-  //   this.#view.renderSaveButton();
-  // }
-
-  // #isReportSaved() {
-  //   return false;
-  // }
 }
